@@ -1,27 +1,25 @@
-const app = require('express')();
+const express = require('express');
+const app = express();
 const http = require('http');
 const socketIo = require('socket.io');
 const dotenv = require('dotenv');
+const errorHandler = require('./middleware/error')
 dotenv.config({ path: './config/config.env' });
+const connectionHandler = require('./socket/connectionHandler');
 
-const { getValueFromTo } = require('./controllers/currency')
 
+
+const userRoutes = require('./routes/users');
+
+app.use(express.json());
+
+app.use('/api/v1/users', userRoutes);
+app.use(errorHandler);
 
 const server = http.createServer(app);
 const io = socketIo(server);
 
-io.on('connection', (socket) => {
-  console.log('CLIENT CONNECTED');
-
-  socket.on('REQUEST_MESSAGE', async (data) => {
-    const { value } = data;
-
-    const conversionData = await getValueFromTo(value);
-
-    socket.emit('REQUEST_MESSAGE_RESPONSE', { data, conversionData });
-  })
-
-});
+io.on('connection', connectionHandler);
 
 
 const PORT = process.env.PORT || 5000;
