@@ -5,9 +5,9 @@ const connectionHandler = (socket) => {
   console.log('CLIENT CONNECTED');
 
   socket.on(ON_REQUEST_MESSAGE, async (data) => {
-    const { value } = data;
+    const { value, username } = data;
 
-    const conversionData = await getValueFromTo(value);
+    const conversionData = await getValueFromTo(value, username);
 
     socket.emit('REQUEST_MESSAGE_RESPONSE', { data, conversionData });
   });
