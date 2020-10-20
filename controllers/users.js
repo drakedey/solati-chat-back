@@ -22,8 +22,11 @@ const createUser = asyncHandler(async (req, res, next) => {
 
   const query = `INSERT INTO chat_user (username, user_password) VALUES ($1, $2)`;
   await client.query(query, [username, passwordHash]);
-
-  res.status(200).send(tokenGenerator({ username }));
+  const resPayload = {
+    success: true,
+    data: { username, ...tokenGenerator({ username }) },
+  };
+  res.status(200).send(resPayload);
 });
 
 // @desc Get user by credentials and validate password
@@ -46,8 +49,15 @@ const logingUser = asyncHandler(async (req, res, next) => {
   if (!match) {
     return next(new ErrorResponse('Invalid user credentials', 401));
   }
+  const resPayload = {
+    success: true,
+    data: {
+      username: userData['username'],
+      ...tokenGenerator({ username: userData['username'] }),
+    },
+  };
 
-  res.status(200).send(tokenGenerator({ username: userData['username:'] }));
+  res.status(200).send(resPayload);
 });
 
 // @desc Verify if user with the username exists
@@ -72,5 +82,5 @@ const getUserByUsername = asyncHandler(async (req, res, next) => {
 module.exports = {
   createUser,
   logingUser,
-  getUserByUsername
+  getUserByUsername,
 };
