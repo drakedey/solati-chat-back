@@ -1,3 +1,2 @@
 node_modules
-config
-pgdata
+npm-debug.log

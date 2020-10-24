@@ -1,0 +1,24 @@
+version: "3.7"
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_USER: postgres
+      POSTGRES_DB: chat_solati
+    volumes:
+      - './pgdata:/var/lib/postgresql/data'
+    ports:
+      - '5432:5432'
+  web:
+    image: joskarandres/solati-chat-backend
+    depends_on: 
+      - db
+    ports: 
+      - '4000:4000'
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s

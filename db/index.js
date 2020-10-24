@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 const { Client } = require('pg');
 
 const client = new Client({
@@ -8,6 +10,21 @@ const client = new Client({
   port: process.env.DB_PORT,
 });
 
-client.connect()
+(async () => {
+  let retries = 3;
+  while (retries) {
+    try {
+      await client.connect();
+      break;
+    } catch (err) {
+      if (err.code == 'ECONNREFUSED')
+        retries--;
+      else
+        break;
+      console.log(`retries left: ${retries}`);
+    }
+  }
+  if (!retries) process.exit(0);
+})();
 
-module.exports =  client
+module.exports = client;
