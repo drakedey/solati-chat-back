@@ -10,21 +10,6 @@ const client = new Client({
   port: process.env.DB_PORT,
 });
 
-(async () => {
-  let retries = 3;
-  while (retries) {
-    try {
-      await client.connect();
-      break;
-    } catch (err) {
-      if (err.code == 'ECONNREFUSED')
-        retries--;
-      else
-        break;
-      console.log(`retries left: ${retries}`);
-    }
-  }
-  if (!retries) process.exit(0);
-})();
+client.connect()
 
 module.exports = client;

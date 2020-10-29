@@ -9,4 +9,4 @@ COPY . .
 
 EXPOSE 8080
 
-CMD [ "node", "server.js" ]
+CMD [ "./wait.sh", "db:5432", "--" , "node", "server.js" ]
