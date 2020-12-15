@@ -7,6 +7,7 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
+      - run: apt-get update
       - run: apt-get install -y sudo # https://discuss.circleci.com/t/sudo-command-not-found/14208/4
       - run: ls -al /bin/sh && sudo rm /bin/sh && sudo ln -s /bin/bash /bin/sh && ls -al /bin/sh
       - run:
