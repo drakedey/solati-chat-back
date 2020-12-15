@@ -3,15 +3,10 @@ jobs:
   build:
     working_directory: /user/src/app
     docker:
-      - image: docker:20.10.0-git
+      - image: circleci/cci-demo-docker-primary:0.0.2
     steps:
       - checkout
       - setup_remote_docker
-      - run:
-          name: Install dependencies
-          command: |
-            sudo apt-get update
-            sudo apt install curl
       - run:
           name: Install Docker Compose
           command: |
