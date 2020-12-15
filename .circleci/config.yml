@@ -8,6 +8,11 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
+          name: Install dependencies
+          command: |
+            sudo apt-get update
+            sudo apt install curl
+      - run:
           name: Install Docker Compose
           command: |
             curl -L https://github.com/docker/compose/releases/download/1.25.3/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
