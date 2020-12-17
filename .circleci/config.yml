@@ -26,6 +26,7 @@ jobs:
       - run:
           name: push docker images
           command: |
+            docker ps -a
             docker login -u $DOCKER_HUB_USER_ID -p $DOCKER_HUB_PWD
             docker tag solati-chat-back_web $DOCKER_HUB_USER_ID/solati-chat-back_web:$CIRCLE_SHA1
             docker tag solati-chat-back_db $DOCKER_HUB_USER_ID/solati-chat-back_db:$CIRCLE_SHA1
