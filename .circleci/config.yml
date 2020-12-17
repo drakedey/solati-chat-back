@@ -1,16 +1,10 @@
-version: 2.1
-executors:
-  docker-publisher:
-    docker:
-     - image: circleci/node:stretch
+version: 2
 jobs:
   build:
     working_directory: /user/src/app
-    executor: docker-publisher
+    docker:
+      - image: circleci/cci-demo-docker-primary:0.0.2
     steps:
-      - run:
-        name: 'Grants permissions to circle ci user'
-        command: chown -R $USER:$USER /user/src/app
       - checkout
       - setup_remote_docker
       - run: apt-get update
@@ -26,33 +20,3 @@ jobs:
           name: Run tests
           command: |
             docker-compose up -d
-            docker ps -a
-            
-  deployment:
-    executor: docker-publisher
-    steps:
-      - setup_remote_docker
-      - run:
-          name: Publicar imagenes docker
-          command: |
-            docker login -e $DOCKER_HUB_EMAIL -u $DOCKER_HUB_USER_ID -p $DOCKER_HUB_PWD
-            docker tag solati-chat-back_web $DOCKER_HUB_USER_ID/solati-chat-back_web:$CIRCLE_SHA1
-            docker tag solati-chat-back_db $DOCKER_HUB_USER_ID/solati-chat-back_db:$CIRCLE_SHA1
-            docker tag solati-chat-back_web $DOCKER_HUB_USER_ID/solati-chat-back_web:latest
-            docker tag solati-chat-back_db $DOCKER_HUB_USER_ID/solati-chat-back_db:latest
-            docker push $DOCKER_HUB_USER_ID/solati-chat-back_db:latest
-            docker push $DOCKER_HUB_USER_ID/solati-chat-back_web:latest
-workflows:
-  version: 2
-  build-main:
-    jobs:
-      - build:
-          filters:
-            branches:
-              only: main
-      - deployment:
-          requires:
-            - build
-          filters:
-            branches:
-              only: main
