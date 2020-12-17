@@ -2,12 +2,11 @@ version: 2.1
 executors:
   docker-publisher:
     docker:
-     - image: circleci/buildpack-deps:stretch
+     - image: circleci/node:stretch
 jobs:
   build:
     working_directory: /user/src/app
-    docker:
-     - image: circleci/buildpack-deps:stretch
+    executor: docker-publisher
     steps:
       - checkout
       - setup_remote_docker
