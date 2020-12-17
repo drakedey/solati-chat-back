@@ -10,7 +10,7 @@ jobs:
     steps:
       - run:
         name: 'Grants permissions to circle ci user'
-        command: 'chown -R $USER:$USER /user/src/app'
+        command: chown -R $USER:$USER /user/src/app
       - checkout
       - setup_remote_docker
       - run: apt-get update
