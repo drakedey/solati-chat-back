@@ -1,9 +1,12 @@
-version: 2
+version: 2.1
+executors:
+  docker-publisher:
+    docker:
+     - image: circleci/buildpack-deps:stretch
 jobs:
   build:
     working_directory: /user/src/app
-    docker:
-      - image: circleci/cci-demo-docker-primary:0.0.2
+    executor: docker-publisher
     steps:
       - checkout
       - setup_remote_docker
@@ -20,9 +23,10 @@ jobs:
           name: Run tests
           command: |
             docker-compose up -d
+            docker ps -a
+            
   deployment:
-    docker:
-      - image: circleci/cci-demo-docker-primary:0.0.2
+    executor: docker-publisher
     steps:
       - setup_remote_docker
       - run:
