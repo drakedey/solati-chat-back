@@ -22,7 +22,7 @@ jobs:
             docker-compose up -d
     deployment:
       hub:
-        branch: [master]
+        branch: [main]
         command: |
           - docker login -e $DOCKER_HUB_EMAIL -u $DOCKER_HUB_USER_ID -p $DOCKER_HUB_PWD
           - docker tag solati-chat-back_web $DOCKER_HUB_USER_ID/solati-chat-back_web:$CIRCLE_SHA1
