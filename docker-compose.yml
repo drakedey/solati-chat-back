@@ -2,7 +2,6 @@ version: "3.7"
 services:
   db:
     build: ./db/
-    # image: joskarandres/chat_solati_db
     environment:
       POSTGRES_PASSWORD: 1234
       POSTGRES_USER: postgres
@@ -14,7 +13,6 @@ services:
     ports:
       - '5432:5432'
   web:
-    # image: joskarandres/solati-chat-backend
     build: .
     depends_on: 
       - db
