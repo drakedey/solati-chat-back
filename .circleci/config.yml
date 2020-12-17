@@ -6,7 +6,8 @@ executors:
 jobs:
   build:
     working_directory: /user/src/app
-    executor: docker-publisher
+    docker:
+     - image: circleci/buildpack-deps:stretch
     steps:
       - checkout
       - setup_remote_docker
