@@ -1,7 +1,7 @@
 version: 2
 jobs:
   build:
-    working_directory: /user/src/app
+    # working_directory: /user/src/app
     docker:
       - image: circleci/node:stretch
     steps:
