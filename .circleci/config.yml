@@ -3,20 +3,33 @@ jobs:
   build:
     working_directory: /user/src/app
     docker:
-      - image: circleci/cci-demo-docker-primary:0.0.2
+      - image: circleci/node:stretch
     steps:
       - checkout
       - setup_remote_docker
-      - run: apt-get update
-      - run: apt-get install -y sudo # https://discuss.circleci.com/t/sudo-command-not-found/14208/4
-      - run: ls -al /bin/sh && sudo rm /bin/sh && sudo ln -s /bin/bash /bin/sh && ls -al /bin/sh
-      - run:
-          name: Install Docker Compose
-          command: |
-            curl -L https://github.com/docker/compose/releases/download/1.25.3/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
-            chmod +x ~/docker-compose
-            sudo mv ~/docker-compose /usr/local/bin/docker-compose
+      # - run: apt-get update
+      # - run: apt-get install -y sudo # https://discuss.circleci.com/t/sudo-command-not-found/14208/4
+      # - run: ls -al /bin/sh && sudo rm /bin/sh && sudo ln -s /bin/bash /bin/sh && ls -al /bin/sh
+      # - run:
+      #     name: Install Docker Compose
+      #     command: |
+      #       curl -L https://github.com/docker/compose/releases/download/1.25.3/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
+      #       chmod +x ~/docker-compose
+      #       sudo mv ~/docker-compose /usr/local/bin/docker-compose
+      # -run: 
+      #     name: Install Docker
+      #     command: |
       - run:
           name: Run tests
           command: |
             docker-compose up -d
+      - run:
+          name: push docker images
+          command: |
+            docker login -e $DOCKER_HUB_EMAIL -u $DOCKER_HUB_USER_ID -p $DOCKER_HUB_PWD
+            docker tag solati-chat-back_web $DOCKER_HUB_USER_ID/solati-chat-back_web:$CIRCLE_SHA1
+            docker tag solati-chat-back_db $DOCKER_HUB_USER_ID/solati-chat-back_db:$CIRCLE_SHA1
+            docker tag solati-chat-back_web $DOCKER_HUB_USER_ID/solati-chat-back_web:latest
+            docker tag solati-chat-back_db $DOCKER_HUB_USER_ID/solati-chat-back_db:latest
+            docker push $DOCKER_HUB_USER_ID/solati-chat-back_db:latest
+            docker push $DOCKER_HUB_USER_ID/solati-chat-back_web:latest
